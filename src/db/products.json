@@ -1,0 +1,74 @@
+[
+  { "id": "d9aeb510-0dcb-4974-aa03-0ac386c7d7a4", "status": true },
+  {
+    "id": "95681a53-fe85-40f9-84d1-e3bdb61a7e68",
+    "status": "false",
+    "title": "Papa negra",
+    "description": "una papa muy negra",
+    "code": "123123",
+    "price": "45",
+    "stock": "45",
+    "category": "comida"
+  },
+  {
+    "id": "98ad017a-2972-45d5-8b3e-5f6d77e6f965",
+    "status": "false",
+    "title": "Papa roja",
+    "description": "una papa muy roja",
+    "code": "123123",
+    "price": "55",
+    "stock": "45",
+    "category": "comida"
+  },
+  {
+    "id": "53329146-86b3-4efd-91c7-12c22d27164d",
+    "status": "false",
+    "title": "Papa negra",
+    "description": "una papa muy negra",
+    "code": "123123",
+    "price": "45",
+    "stock": "45",
+    "category": "comida"
+  },
+  {
+    "id": "7d4df940-12dc-4cd6-907a-1f9117e5d0ea",
+    "status": "false",
+    "title": "Papa negra",
+    "description": "una papa muy negra",
+    "code": "123123",
+    "price": "45",
+    "stock": "45",
+    "category": "comida"
+  },
+  {
+    "id": "6dbfb862-c4ef-4861-83e4-f2a75825e580",
+    "status": "false",
+    "title": "Papa negra",
+    "description": "una papa muy negra",
+    "code": "123123",
+    "price": "45",
+    "stock": "45",
+    "category": "comida"
+  },
+  {
+    "id": "86b01b14-1fd5-43dc-9641-799ef77a256d",
+    "status": "false",
+    "title": "Papa negra",
+    "description": "una papa muy negra",
+    "code": "123123",
+    "price": "45",
+    "stock": "45",
+    "category": "comida"
+  },
+  {
+    "id": "7536f30a-f476-44d8-a46d-9392280ad2b2",
+    "status": "false",
+    "quantity": 1,
+    "title": "Gift Card de Lol de 50$ argentinos",
+    "description": "para que te compres maplhite arrecife",
+    "code": "123123",
+    "price": "45",
+    "stock": "45",
+    "category": "comida"
+  }
+]
