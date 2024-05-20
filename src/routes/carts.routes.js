@@ -14,7 +14,7 @@ router.post("/", async (req, res) => {
         if (!createdCart) {
             res.status(404).json({ status: "error", message: "this cart doesn't exist" })
         }
-        res.status(200).json(createdCart);
+        res.status(201).json(createdCart);
     } catch {
         res.status(404).json({ status: "Error", message: "Error" })
     }
@@ -41,7 +41,7 @@ router.post("/:cid/products/:pid", async (req, res) => {
         const response = await cartManager.pushProductInCart(cid, pid);
         console.log(response)
         if (!response) res.status(400).json({ status: "error", message: "this cart id doesn't exist" });
-        res.status(200).json(response)
+        res.status(201).json(response)
 
     } catch {
         res.status(404).json({ status: "Error", message: "Error" })
