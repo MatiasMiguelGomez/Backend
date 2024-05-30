@@ -1,0 +1,20 @@
+<p>table: real time products</p>
+<form action='' id='form'>
+  <label forHTML='title-input'>title</label>
+  <input type='text' id='title-input' />
+  <label forHTML='description-input'>description</label>
+  <input type='text' id='description-input' />
+  <label forHTML='code-input'>code</label>
+  <input type='text' id='code-input' />
+  <label forHTML='price-input'>price</label>
+  <input type='number' id='price-input' />
+  <label forHTML='stock-input'>stock</label>
+  <input type='number' id='stock-input' />
+  <label forHTML='category-input'>category</label>
+  <input type='text' id='category-input' />
+  <button type='submit'>send product</button>
+</form>
+<div id='container'></div>
+
+<script src='/socket.io/socket.io.js'></script>
+<script src='/index.js'></script>
