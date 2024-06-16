@@ -3,7 +3,7 @@ import { request, response } from 'express';
 export const checkData = (req = request, res = response, next) => {
   const { title, description, code, price, stock, category } = req.body;
   if (
-    title === undefined ||
+    title === undefined || title != String,
     description === undefined ||
     code === undefined ||
     (price === undefined && typeof price !== 'number') ||

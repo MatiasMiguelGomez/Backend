@@ -1,17 +1,26 @@
 import { Router } from 'express';
-import ProductManager from '../managers/products.manager.js';
-import { __dirname } from '../path.js';
+import productModel from '../dao/mongoDB/product.dao.js';
 import { checkData } from '../middlewares/checkdata.middleware.js';
 import { checkUpdates } from '../middlewares/checkUpdates.middleware.js';
 
 const router = Router();
 
-const productManager = new ProductManager(`${__dirname}/db/products.json`);
-
 router.get('/', async (req, res) => {
   try {
-    const { limit } = req.query;
-    const products = await productManager.getProducts(Number(limit));
+    const { limit, page, sort, category } = req.query;
+    const filters = {
+      limit: limit || 10,
+      page: page || 1,
+      sort: {
+        price: sort === 'asc' ? 1 : -1,
+      },
+      lean: true,
+    };
+    const query = { status: true };
+
+    if (category) query.category = category;
+
+    const products = await productModel.getAllProducts(query, filters);
     res.status(200).json(products);
   } catch (error) {
     res.status(404).json({ status: 'Error', message: 'Error' });
@@ -21,11 +30,9 @@ router.get('/', async (req, res) => {
 router.get('/:pid', async (req, res) => {
   try {
     const { pid } = req.params;
-    const product = await productManager.getProductById(pid);
+    const product = await productModel.getProductById(pid);
     if (!product) {
-      res
-        .status(404)
-        .json({ status: 'Error', message: "This product doesn't exist" });
+      res.status(404).json({ status: 'Error', message: "This product doesn't exist" });
     } else {
       res.status(200).json(product);
     }
@@ -37,7 +44,7 @@ router.get('/:pid', async (req, res) => {
 router.post('/', checkData, async (req, res) => {
   try {
     const product = req.body;
-    const newProduct = await productManager.createProduct(product);
+    const newProduct = await productModel.createProduct(product);
     res.status(201).json({
       status: 'success',
       message: `The product ${newProduct.title} was added`,
@@ -47,15 +54,13 @@ router.post('/', checkData, async (req, res) => {
   }
 });
 
-router.put('/:pid', checkUpdates, async (req, res) => {
+router.put('/:pid', async (req, res) => {
   try {
     const { pid } = req.params;
     const product = req.body;
-    const updatedProduct = await productManager.updateProduct(pid, product);
+    const updatedProduct = await productModel.updateProduct(pid, product);
     if (!updatedProduct) {
-      res
-        .status(404)
-        .json({ status: 'not Found', message: "this product doesn't exist" });
+      res.status(404).json({ status: 'not Found', message: "this product doesn't exist" });
     }
     res.status(200).json({ updatedProduct });
   } catch {
@@ -66,11 +71,9 @@ router.put('/:pid', checkUpdates, async (req, res) => {
 router.delete('/:pid', async (req, res) => {
   try {
     const { pid } = req.params;
-    const deletedProduct = await productManager.deleteProduct(pid);
+    const deletedProduct = await productModel.deleteProduct(pid);
     if (!deletedProduct) {
-      res
-        .status(404)
-        .json({ status: 'not Found', message: "this product doesn't exist" });
+      res.status(404).json({ status: 'not Found', message: "this product doesn't exist" });
     }
     res.status(200).json({
       status: 'success',
