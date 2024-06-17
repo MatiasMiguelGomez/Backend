@@ -1,14 +1,13 @@
 import { Router } from 'express';
 import { __dirname } from '../path.js';
-import ProductManager from '../dao/fileSystem/products.manager.js';
+import productDao from '../dao/mongoDB/product.dao.js';
 
 const router = Router();
-const productManager = new ProductManager(`${__dirname}/db/products.json`);
 
 router.get('/', async (req, res) => {
   console.log('Se ha accedido a la ruta /api/handlebars');
   try {
-    const products = await productManager.getProducts();
+    const products = await productDao.getAllProducts();
     res.render('home', { products });
   } catch (error) {
     console.error(error);

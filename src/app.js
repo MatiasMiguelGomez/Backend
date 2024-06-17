@@ -3,7 +3,7 @@ import routes from './routes/index.routes.js';
 import { __dirname } from './path.js';
 import handlebars from 'express-handlebars';
 import { Server } from 'socket.io';
-import ProductManager from './dao/fileSystem/products.manager.js';
+import productDao from './dao/mongoDB/product.dao.js';
 import { connectMongoDB } from './config/mongoDB.config.js';
 
 const PORT = 8080;
@@ -20,8 +20,6 @@ app.set('view engine', 'handlebars');
 
 app.use('/api', routes);
 
-const productManager = new ProductManager(`${__dirname}/db/products.json`);
-
 const http = app.listen(PORT, () => {
   console.log(`The port ${PORT} is being listened to`);
 });
@@ -32,9 +30,8 @@ socketServer.on('connection', async socket => {
   try {
     socket.on('newProduct', async data => {
       try {
-        const newProduct = await productManager.createProduct(data);
-        const products = await productManager.getProducts();
-
+        const newProduct = await productDao.createProduct(data);
+        const products = await productDao.getAllProducts();
         socket.emit('productCreated', newProduct);
         socketServer.emit('allProducts', { products });
       } catch {}

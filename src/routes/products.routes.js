@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import productModel from '../dao/mongoDB/product.dao.js';
 import { checkData } from '../middlewares/checkdata.middleware.js';
-import { checkUpdates } from '../middlewares/checkUpdates.middleware.js';
 
 const router = Router();
 
 router.get('/', async (req, res) => {
   try {
     const { limit, page, sort, category } = req.query;
+    //creacion del objeto filters, con valores default si el usuario no ingresa los valores
     const filters = {
       limit: limit || 10,
       page: page || 1,
@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
       lean: true,
     };
     const query = { status: true };
-
+    // por defecto solo traemos los objetos con status en true, en caso de que el usuario tambien agregue la categoria se le suma al objeto query la propiedad de category
     if (category) query.category = category;
 
     const products = await productModel.getAllProducts(query, filters);

@@ -28,14 +28,14 @@ const createCart = async () => {
   }
 };
 
-const pushProductInCart = async (cid, pid) => {
+const pushProductInCart = async (cid, pid, numbQuery) => {
   try {
     const cart = await getCartById(cid);
     const productInCart = cart.products.find(p => p.product == pid);
     if (!productInCart) {
-      cart.products.push({ product: pid, quantity: 1 });
+      cart.products.push({ product: pid, quantity: numbQuery });
     } else {
-      productInCart.quantity++;
+      productInCart.quantity += numbQuery;
     }
     cart.save();
     return cart;
@@ -44,9 +44,8 @@ const pushProductInCart = async (cid, pid) => {
   }
 };
 
-const deleteProductInCart = async (cid, pid, numbQuery = 1) => {
+const deleteProductInCart = async (cid, pid, numbQuery) => {
   try {
-    numbQuery = typeof numbQuery === 'undefined' ? 1 : Number(numbQuery);
     const cart = await getCartById(cid);
     cart.products = cart.products
       .map(p => {

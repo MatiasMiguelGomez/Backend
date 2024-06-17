@@ -31,11 +31,13 @@ router.get('/:cid', async (req, res) => {
 router.post('/:cid/products/:pid', async (req, res) => {
   try {
     const { cid, pid } = req.params;
+    const { quantity } = req.body;
+    const numbQuery = quantity ? Number(quantity) : 1;
     const product = await productDAO.getProductById(pid);
     if (!product) return res.status(404).json({ status: 'Error', message: 'Product doesnt exist' });
     const cart = await cartDAO.getCartById(cid);
     if (!cart) return res.status(404).json({ status: 'Error', message: 'Cart doesnt exist' });
-    const productToCart = await cartDAO.pushProductInCart(cid, pid);
+    const productToCart = await cartDAO.pushProductInCart(cid, pid, numbQuery);
     res.status(201).json({ status: 'Success', Payload: productToCart });
   } catch {
     res.status(404).json({ status: 'Error', message: 'Error' });
@@ -45,8 +47,8 @@ router.post('/:cid/products/:pid', async (req, res) => {
 router.delete('/:cid/products/:pid', async (req, res) => {
   try {
     const { cid, pid } = req.params;
-    const { quantity } = req.query;
-    const numbQuery = Number(quantity);
+    const { quantity } = req.body;
+    const numbQuery = quantity ? Number(quantity) : 1;
     const product = await productDAO.getProductById(pid);
     if (!product) return res.status(404).json({ status: 'Error', message: 'Product doesnt exist' });
     const cart = await cartDAO.getCartById(cid);
@@ -62,7 +64,7 @@ router.put('/:cid/products/:pid', async (req, res) => {
   try {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
-    const numbQuery = Number(quantity);
+    const numbQuery = quantity ? Number(quantity) : 1;
     const product = await productDAO.getProductById(pid);
     if (!product) return res.status(404).json({ status: 'Error', message: 'Product doesnt exist' });
     const cart = await cartDAO.getCartById(cid);
@@ -73,6 +75,8 @@ router.put('/:cid/products/:pid', async (req, res) => {
     res.status(404).json({ status: 'Error', message: 'Error' });
   }
 });
+
+//los endpoints de post put y delete de items dentro del carrito estan configurados para borrar de manera individual 1 a 1 los productos o tambien a borrar cantidades mayores si se lo pasamos por el body
 
 router.delete('/:cid', async (req, res) => {
   try {
