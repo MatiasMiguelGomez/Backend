@@ -1,40 +1,25 @@
 import express from 'express';
+import session from 'express-session';
 import routes from './routes/index.routes.js';
-import { __dirname } from './path.js';
-import handlebars from 'express-handlebars';
-import { Server } from 'socket.io';
-import productDao from './dao/mongoDB/product.dao.js';
 import { connectMongoDB } from './config/mongoDB.config.js';
+import envs from './config/envs.config.js';
+import passport from 'passport';
+import { initializePassport } from './config/passport.config.js';
+import cookieParser from 'cookie-parser';
 
-const PORT = 8080;
 const app = express();
-connectMongoDB();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
-
-app.engine('handlebars', handlebars.engine());
-app.set('views', __dirname + '/views');
-app.set('view engine', 'handlebars');
+app.use(session({ secret: envs.SECRET_CODE, resave: true, saveUninitialized: true }));
+app.use(cookieParser());
+connectMongoDB();
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/api', routes);
 
-const http = app.listen(PORT, () => {
-  console.log(`The port ${PORT} is being listened to`);
-});
-
-const socketServer = new Server(http);
-
-socketServer.on('connection', async socket => {
-  try {
-    socket.on('newProduct', async data => {
-      try {
-        const newProduct = await productDao.createProduct(data);
-        const products = await productDao.getAllProducts();
-        socket.emit('productCreated', newProduct);
-        socketServer.emit('allProducts', { products });
-      } catch {}
-    });
-  } catch {}
+app.listen(envs.PORT, () => {
+  console.log(`The port ${envs.PORT} is being listened to`);
 });
