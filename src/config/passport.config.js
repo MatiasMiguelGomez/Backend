@@ -1,8 +1,8 @@
 import passport from 'passport';
 import local from 'passport-local';
 import jwt from 'passport-jwt';
-import userDao from '../dao/mongoDB/user.dao.js';
-import cartDao from '../dao/mongoDB/cart.dao.js';
+import userServices from '../modules/users/services/user.services.js';
+import cartServices from '../modules/carts/services/cart.services.js';
 import { hashPassword, validateHash } from '../utils/hashPassword.js';
 import envsConfig from './envs.config.js';
 import { cookieExtractor } from '../utils/cookieExtractor.js';
@@ -19,9 +19,9 @@ export const initializePassport = () => {
       async (req, username, password, done) => {
         try {
           const { first_name, last_name, age } = req.body;
-          const userExist = await userDao.findUser({ email: username });
+          const userExist = await userServices.findUser({ email: username });
           if (userExist) return done(null, false);
-          const cart = await cartDao.createCart();
+          const cart = await cartServices.createCart();
 
           const newUser = {
             first_name,
@@ -31,7 +31,7 @@ export const initializePassport = () => {
             age,
             cart_id: cart._id,
           };
-          const userCreated = await userDao.addUser(newUser);
+          const userCreated = await userServices.addUser(newUser);
 
           return done(null, userCreated);
         } catch (error) {
@@ -47,7 +47,7 @@ export const initializePassport = () => {
       { usernameField: 'email', secretOrPrivateKey: envsConfig.JWT_SECRET_CODE },
       async (username, password, done) => {
         try {
-          const user = await userDao.findUser({ email: username });
+          const user = await userServices.findUser({ email: username });
           if (!user || !validateHash(user.password, password)) {
             return done(null, false);
           }
@@ -69,7 +69,7 @@ export const initializePassport = () => {
       },
       async (jwt_payload, done) => {
         try {
-          const user = await userDao.findUser({ email: jwt_payload.email });
+          const user = await userServices.findUser({ email: jwt_payload.email });
           if (!user) return done(null, false);
           return done(null, user);
         } catch (error) {
@@ -84,7 +84,7 @@ export const initializePassport = () => {
   });
   passport.deserializeUser(async (id, done) => {
     try {
-      const user = await userDao.findUser({ id: id });
+      const user = await userServices.findUser({ id: id });
       return done(null, user);
     } catch (error) {
       done(error);

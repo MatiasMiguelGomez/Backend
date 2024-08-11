@@ -1,4 +1,4 @@
-import { userModel } from './models/user.model.js';
+import { userModel } from '../models/user.model.js';
 
 const findUser = async query => {
   const user = await userModel.findOne(query);
