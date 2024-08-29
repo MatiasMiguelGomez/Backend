@@ -13,8 +13,7 @@ const getProductsInCart = async cid => {
 
 const getCartById = async cid => {
   try {
-    const cart = await cartModel.findById(cid);
-
+    const cart = await cartModel.findOne({ _id: cid });
     return cart;
   } catch (error) {
     console.error(`Error:${error}`);
@@ -30,22 +29,9 @@ const createCart = async () => {
   }
 };
 
-// const pushProductInCart = async (cid, pid, numbQuery) => {
-//   try {
-//     //esta logica es para agregar
-//     const cart = await getCartById(cid);
-//     const productInCart = cart.products.find(p => p.product == pid);
-//     if (!productInCart) {
-//       cart.products.push({ product: pid, quantity: numbQuery });
-//     } else {
-//       productInCart.quantity += numbQuery;
-//     }
-//     cart.save();
-//     return cart;
-//   } catch (error) {
-//     console.error(`Error: ${error}`);
-//   }
-// };
+const updateCart = async (id, prod) => {
+  return await cartModel.findByIdAndUpdate(id, prod);
+};
 
 const addProductInCart = async (pid, cid, quantity) => {
   const cart = await cartModel.findOne({ _id: cid });
@@ -101,6 +87,7 @@ const deleteProducts = async cid => {
 };
 
 export default {
+  updateCart,
   getProductsInCart,
   createCart,
   getCartById,

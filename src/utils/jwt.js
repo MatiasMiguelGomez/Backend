@@ -2,8 +2,10 @@ import jwt from 'jsonwebtoken';
 import envs from '../config/envs.config.js';
 
 export const createToken = user => {
-  const { _id, email } = user;
-  return jwt.sign({ _id, email }, envs.JWT_SECRET_CODE, { expiresIn: '2m' });
+  const { _id, email, last_name, first_name } = user;
+  return jwt.sign({ _id, email, last_name, first_name }, envs.JWT_SECRET_CODE, {
+    expiresIn: '20m',
+  });
 };
 
 export const validateToken = token => {
